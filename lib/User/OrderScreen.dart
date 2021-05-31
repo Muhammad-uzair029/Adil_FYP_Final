@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils.dart';
+import 'package:toast/toast.dart';
 import 'package:ecommerce_fyp/Add_fvrt/fvrt_list.dart';
 
 class Order extends StatefulWidget {
@@ -328,15 +329,12 @@ class _OrderState extends State<Order> {
                           widget._productID,
                           widget._image,
                           widget._shopkeeperID);
-
+                      Toast.show("Product Added into Cart", context,
+                          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
                       print("add to cart Image Shownn");
                       print(_image);
                       print(_email);
                       Navigator.pop(context);
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            widget._name.toString() + "are added into Cart"),
-                      ));
                     },
                     color: Colors.amber,
                     child: Text(

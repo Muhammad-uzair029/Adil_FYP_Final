@@ -518,6 +518,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.30"
+  toast:
+    dependency: "direct main"
+    description:
+      name: toast
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.5"
   toggle_bar:
     dependency: "direct main"
     description:
