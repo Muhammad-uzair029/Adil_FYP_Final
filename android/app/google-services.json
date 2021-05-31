@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "310346260719",
+    "project_id": "e-commerce-fyp-92bb2",
+    "storage_bucket": "e-commerce-fyp-92bb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310346260719:android:c9a0b7a8d64870f922bb1a",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310346260719-h3622fatfg6lgmds3h17nkuv96sg02ee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRdkC0UE5LzNX86CZb7MUJA-ieF_TfbFY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310346260719-h3622fatfg6lgmds3h17nkuv96sg02ee.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
