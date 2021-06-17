@@ -1,4 +1,4 @@
-package com.example.ecommerce_fyp
+package com.adilfinal.ecommerce_fyp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -6,6 +6,7 @@ void main() {
   runApp(
     OverlaySupport(
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Splash(),
       ),
     ),

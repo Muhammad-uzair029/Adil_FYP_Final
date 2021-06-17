@@ -30,7 +30,7 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
   final _firestore = FirebaseFirestore.instance;
   FlutterLocalNotificationsPlugin local = FlutterLocalNotificationsPlugin();
   int cataIndex = 0;
-  String cataName = "";
+  String cataName = "Table";
   void settingtoken() async {
     _firestore
         .collection('usertoken')
@@ -49,7 +49,7 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
       Global.fbtoken = token;
       settingtoken();
       // Timer(Duration(milliseconds: 300), () {
-      getProducts("Drinks");
+      getProducts("Table");
       // });/
     });
     var android = AndroidInitializationSettings('app_icon');
@@ -60,214 +60,131 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: Colors.amber,
-        automaticallyImplyLeading: false,
-        actions: [
-          if (bottomNavigationIndex == 0)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: IconButton(
-                  icon: Icon(Icons.add_box_sharp),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Product();
-                    })).then((value) => getProducts(cataName));
-                  }),
-            ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-            child: IconButton(
-                icon: Icon(Icons.clear),
-                onPressed: () {
-                  saveSession();
-                  logoutUser();
-                }),
+    return DefaultTabController(
+        length: 2,
+        initialIndex: 0,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text(title),
+            backgroundColor: Colors.amber,
+            automaticallyImplyLeading: false,
+            actions: [
+              if (bottomNavigationIndex == 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                  child: IconButton(
+                      icon: Icon(Icons.add_box_sharp),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Product();
+                        })).then((value) => getProducts(cataName));
+                      }),
+                ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                child: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      saveSession();
+                      logoutUser();
+                    }),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Builder(
-        builder: (context) {
-          return SingleChildScrollView(
-              child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                      child: Column(children: [
-                    (bottomNavigationIndex == 0)
-                        ? Column(children: [
-                            new Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: new Text('Categories',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold))),
-                            ),
-                            Container(
-                              height: 100.0,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: <Widget>[
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "Drinks";
-                                        });
-
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/5.jpg',
-                                        image_caption: 'Drinks',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "Sauces";
-                                        });
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/6.jpg',
-                                        image_caption: 'Sauces',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "Frozen Foods";
-                                        });
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/7.jpg',
-                                        image_caption: 'Frozen Foods',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "Snacks";
-                                        });
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/8.jpg',
-                                        image_caption: 'Snacks',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "Grocery & Staples";
-                                        });
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/1.jpg',
-                                        image_caption: 'Grocery & Staples',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "Gram";
-                                        });
-
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/2.png',
-                                        image_caption: 'Gram',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = "HouseHold";
-                                        });
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/3.jpg',
-                                        image_caption: 'HouseHold',
-                                      )),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          cataName = " Breakfast & Dairy";
-                                        });
-                                        print(cataIndex);
-                                        print(cataName);
-                                        getProducts(cataName);
-                                      },
-                                      child: Category(
-                                        image_location: 'assets/4.jpg',
-                                        image_caption: ' Breakfast & Dairy',
-                                      )),
-                                ],
-                              ),
-                            )
-                          ])
-                        : Container(),
-                    Container(
+          body: Builder(
+            builder: (context) {
+              return SingleChildScrollView(
+                  child: Container(
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
-                      child: (bottomNavigationIndex == 0)
-                          ? shopkeeperProducts(context, cataName)
-                          : shopkeeperOrders(context),
-                    ),
-                  ]))));
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.widgets_outlined),
-              title: Text('Products'),
-              backgroundColor: Colors.amberAccent),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
-              title: Text('Orders'),
-              backgroundColor: Colors.amberAccent),
-        ],
-        backgroundColor: Colors.amberAccent,
-        elevation: 5,
-        currentIndex: bottomNavigationIndex,
-        selectedItemColor: Colors.blue,
-        iconSize: 40,
-        onTap: (index) {
-          setState(() {
-            bottomNavigationIndex = index;
-            (bottomNavigationIndex == 0)
-                ? title = "Products"
-                : title = "Orders";
+                      child: SingleChildScrollView(
+                          child: Column(children: [
+                        (bottomNavigationIndex == 0)
+                            ? Column(children: [
+                                SizedBox(
+                                  height: 100,
+                                  child: AppBar(
+                                    backgroundColor: Colors.white,
+                                    bottom: TabBar(
+                                      unselectedLabelColor: Colors.black,
+                                      labelColor: Colors.red,
+                                      onTap: (index) {
+                                        setState(() {
+                                          if (index == 0) {
+                                            setState(() {
+                                              cataName = "Table";
+                                            });
 
-            if (index == 0) {
-              getProducts(cataName);
-            } else {
-              getOrders();
-            }
-          });
-        },
-      ),
-    );
+                                            print(cataIndex);
+                                            print(cataName);
+                                            getProducts(cataName);
+                                          } else {
+                                            setState(() {
+                                              cataName = "Food";
+                                            });
+                                            print(cataIndex);
+                                            print(cataName);
+                                            getProducts(cataName);
+                                          }
+                                        });
+                                      },
+                                      tabs: [
+                                        Tab(
+                                            icon: Icon(Icons.table_chart),
+                                            text: "Table"),
+                                        Tab(
+                                            icon: Icon(Icons.food_bank),
+                                            text: "Food")
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ])
+                            : Container(),
+                        Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: (bottomNavigationIndex == 0)
+                              ? shopkeeperProducts(context, cataName)
+                              : shopkeeperOrders(context),
+                        ),
+                      ]))));
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.widgets_outlined),
+                  title: Text('Products'),
+                  backgroundColor: Colors.amberAccent),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart_outlined),
+                  title: Text('Orders'),
+                  backgroundColor: Colors.amberAccent),
+            ],
+            backgroundColor: Colors.amberAccent,
+            elevation: 5,
+            currentIndex: bottomNavigationIndex,
+            selectedItemColor: Colors.blue,
+            iconSize: 40,
+            onTap: (index) {
+              setState(() {
+                bottomNavigationIndex = index;
+                (bottomNavigationIndex == 0)
+                    ? title = "Products"
+                    : title = "Orders";
+
+                if (index == 0) {
+                  getProducts(cataName);
+                } else {
+                  getOrders();
+                }
+              });
+            },
+          ),
+        ));
   }
 
   Widget shopkeeperProducts(BuildContext context, String cata) {
@@ -312,6 +229,7 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
 
   Widget shopkeeperOrders(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       child: dataOrders.length != 0
           ? ListView.builder(
               physics: NeverScrollableScrollPhysics(),
@@ -332,7 +250,7 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
                                 )));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -341,8 +259,8 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  10.0, 0.0, 0.0, 0.0),
+                              padding:
+                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: Text(
                                 dataOrders[index].userName,
                                 style: TextStyle(
@@ -582,38 +500,31 @@ class _ShopKeeperHomeState extends State<ShopKeeperHome> {
   }
 }
 
-class Category extends StatelessWidget {
-  final String image_location;
-  final String image_caption;
+// class Category extends StatelessWidget {
+//   final String image_location;
+//   final String image_caption;
 
-  Category({this.image_location, this.image_caption});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Container(
-        width: 80.0,
-        child: ListTile(
-          title: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: 15,
-            child: ClipOval(
-              child: Image.asset(
-                image_location,
-                width: 90.0,
-                height: 90.0,
-              ),
-            ),
-          ),
-          subtitle: Container(
-            alignment: Alignment.topCenter,
-            child: Text(
-              image_caption,
-              style: new TextStyle(fontSize: 12.0, color: Colors.black),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   Category({this.image_location, this.image_caption});
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Container(
+//         width: MediaQuery.of(context).size.width * 0.3,
+//         child: ListTile(
+//           title:  Container Image.asset(
+//             image_location,
+//             width: 200.0,
+//             height: 140.0,
+//           ),
+//           subtitle: Container(
+//             alignment: Alignment.topCenter,
+//             child: Text(
+//               image_caption,
+//               style: new TextStyle(fontSize: 15.0, color: Colors.black),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

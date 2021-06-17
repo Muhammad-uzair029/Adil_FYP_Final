@@ -1,33 +1,108 @@
 {
   "project_info": {
-    "project_number": "310346260719",
-    "project_id": "e-commerce-fyp-92bb2",
-    "storage_bucket": "e-commerce-fyp-92bb2.appspot.com"
+    "project_number": "496563009258",
+    "firebase_url": "https://sendfile-db5c7-default-rtdb.firebaseio.com",
+    "project_id": "sendfile-db5c7",
+    "storage_bucket": "sendfile-db5c7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:310346260719:android:c9a0b7a8d64870f922bb1a",
+        "mobilesdk_app_id": "1:496563009258:android:b8386198fd62244405c993",
         "android_client_info": {
-          "package_name": "com.example.ecommerce_fyp"
+          "package_name": "com.adil.ecommerce_fyp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "310346260719-h3622fatfg6lgmds3h17nkuv96sg02ee.apps.googleusercontent.com",
+          "client_id": "496563009258-mjarsro1cj4aia7gh66judtm5pemrrqe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adil.ecommerce_fyp",
+            "certificate_hash": "5cd24fc154267e7cf6649cd2a56a9be1465610ba"
+          }
+        },
+        {
+          "client_id": "496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCRdkC0UE5LzNX86CZb7MUJA-ieF_TfbFY"
+          "current_key": "AIzaSyCUEr-vbNhHnrYWGNyItrl3RJdrcr9GsVQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "310346260719-h3622fatfg6lgmds3h17nkuv96sg02ee.apps.googleusercontent.com",
+              "client_id": "496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496563009258:android:cca2acc4d126de6705c993",
+        "android_client_info": {
+          "package_name": "com.adilfinal.ecommerce_fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496563009258-lhvo57jep8uke3j9pb95o02mvrmcr0hl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adilfinal.ecommerce_fyp",
+            "certificate_hash": "5cd24fc154267e7cf6649cd2a56a9be1465610ba"
+          }
+        },
+        {
+          "client_id": "496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUEr-vbNhHnrYWGNyItrl3RJdrcr9GsVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496563009258:android:46f81a958b097df305c993",
+        "android_client_info": {
+          "package_name": "com.example.SendFileTFirebaseS"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUEr-vbNhHnrYWGNyItrl3RJdrcr9GsVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

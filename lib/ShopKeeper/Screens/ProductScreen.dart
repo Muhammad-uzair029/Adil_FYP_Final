@@ -16,20 +16,66 @@ class Product extends StatefulWidget {
 
 class _ProductState extends State<Product> {
   File _image;
+
   TextEditingController name = new TextEditingController();
   TextEditingController price = new TextEditingController();
   TextEditingController description = new TextEditingController();
-  String catagoryValue = "Grocery & Staples";
+  String catagoryValue = "Table";
   // var _catagories = ['Daal', 'Daal2', 'Daaa3', 'Daal3', 'Daal4'];
-  String dropdownValue = 'Grocery & Staples';
+  // String dropdownValue = 'Grocery & Staples';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Product'),
-        backgroundColor: Colors.amber,
-      ),
-      body: Container(
+    return DefaultTabController(
+        length: 2,
+        initialIndex: 0,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Product'),
+            backgroundColor: Colors.amber,
+            bottom: TabBar(
+              onTap: (index) {
+                setState(() {
+                  name.clear();
+                  description.clear();
+                  price.clear();
+
+                  print(_image);
+                  if (index == 0) {
+                    setState(() {
+                      catagoryValue = "Table";
+                      _image = null;
+                    });
+
+                    print(catagoryValue);
+                  } else {
+                    setState(() {
+                      catagoryValue = "Food";
+                      _image = null;
+                    });
+                    print(catagoryValue);
+                  }
+                });
+              },
+              tabs: [
+                Tab(icon: Icon(Icons.contacts), text: "Table"),
+                Tab(icon: Icon(Icons.camera_alt), text: "Food")
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              CommonPotion(),
+              CommonPotion(),
+            ],
+          ),
+
+// added by me
+        ));
+  }
+
+  Widget CommonPotion() {
+    return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
@@ -173,54 +219,6 @@ class _ProductState extends State<Product> {
                     fillColor: Colors.grey[200]),
               ),
             ),
-// added by me
-
-            Padding(
-                padding: EdgeInsets.only(left: 25),
-                child: Row(children: [
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: new Text('Choose Categories: ',
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold))),
-                  ),
-                  DropdownButton<String>(
-                    value: catagoryValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        catagoryValue = newValue.toString();
-                      });
-                    },
-                    items: <String>[
-                      'Grocery & Staples',
-                      'Gram',
-                      'HouseHold',
-                      'Breakfast & Dairy',
-                      'Drinks',
-                      'Sauces',
-                      'Frozen Foods',
-                      'Snacks'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  )
-                ])),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 0.0),
               child: ButtonTheme(
@@ -243,9 +241,7 @@ class _ProductState extends State<Product> {
               ),
             ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   _imgFromGallery() async {
@@ -325,13 +321,13 @@ class _ProductState extends State<Product> {
         'price': price.text.trim(),
         'description': description.text.trim(),
       });
-      await databaseReference2.set({
-        'user': FirebaseAuth.instance.currentUser.uid,
-        'image': fileName.toString(),
-        'name': name.text.trim(),
-        'price': price.text.trim(),
-        'description': description.text.trim(),
-      });
+      // await databaseReference2.set({
+      //   'user': FirebaseAuth.instance.currentUser.uid,
+      //   'image': fileName.toString(),
+      //   'name': name.text.trim(),
+      //   'price': price.text.trim(),
+      //   'description': description.text.trim(),
+      // });
       Navigator.pop(context);
       Navigator.pop(context);
     });

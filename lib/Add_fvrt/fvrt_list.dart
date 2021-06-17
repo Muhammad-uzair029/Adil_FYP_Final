@@ -63,6 +63,9 @@ class _heartState extends State<heart> {
                 itemBuilder: (BuildContext context, int index) {
                   Variable.counter = studlist.length;
                   Student st = studlist[index];
+                  print('Price Type');
+                  print(st.productPrice.runtimeType);
+
                   print(st.productPrice);
                   bill = bill + int.parse(st.productPrice);
 

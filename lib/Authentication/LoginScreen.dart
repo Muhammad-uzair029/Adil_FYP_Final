@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException, UserCredential;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ShopKeeper/Screens/ShopKeeperHomeScreen.dart';
 
@@ -24,7 +23,6 @@ class _LoginState extends State<Login> {
   TextEditingController code = new TextEditingController();
   TextEditingController email = new TextEditingController();
   TextEditingController password = new TextEditingController();
-
 
   _LoginState(this.type);
 
@@ -165,7 +163,7 @@ class _LoginState extends State<Login> {
                         child: RaisedButton(
                           onPressed: () {
                             if (!validation(context)) return;
-                            login(context,type,email.text.toString(),password.text.toString());
+                            login(context);
                           },
                           color: Colors.amber,
                           child: Text(
@@ -256,12 +254,12 @@ class _LoginState extends State<Login> {
     return true;
   }
 
-  void login(BuildContext context,String type,String email,String password) async {
+  void login(BuildContext context) async {
     Utils.loader(context);
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-              email: email, password: password);
+              email: email.text.trim(), password: password.text.trim());
 
       DatabaseReference databaseReference = FirebaseDatabase.instance
           .reference()
@@ -270,49 +268,39 @@ class _LoginState extends State<Login> {
       await databaseReference.once().then((DataSnapshot snapshot) {
         Navigator.pop(context);
 
-        if(snapshot.value != null){
-          saveSession(type.toLowerCase(),email, password);
-
-          if (type.toLowerCase() == 'admin') {
+        if (type.toLowerCase() == 'admin') {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => AdminHome()),
+              ModalRoute.withName("/Admin"));
+        } else if (type.toLowerCase() == 'shopkeeper') {
+          if (snapshot.value['active'] == 1) {
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => AdminHome()),
-                ModalRoute.withName("/Admin"));
-          } else if (type.toLowerCase() == 'shopkeeper') {
-            if (snapshot.value['active'] == 1) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => ShopKeeperHome()),
-                  ModalRoute.withName("/Shopkeeper"));
-            } else {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text('Shopkeeper is not active'),
-              ));
-            }
-          } else if (type.toLowerCase() == 'user') {
-            if (snapshot.value['active'] == 1) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserHome(
-                          snapshot.value['name'],
-                          snapshot.value['email'],
-                          snapshot.value['phone'],
-                          snapshot.value['address'])),
-                  ModalRoute.withName("/User"));
-            } else {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text('User is not active'),
-              ));
-            }
+                MaterialPageRoute(builder: (context) => ShopKeeperHome()),
+                ModalRoute.withName("/Shopkeeper"));
+          } else {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('Shopkeeper is not active'),
+            ));
           }
-        }else{
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text('user-not-found'),
-          ));
+        } else if (type.toLowerCase() == 'user') {
+          if (snapshot.value['active'] == 1) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserHome(
+                        snapshot.value['name'],
+                        snapshot.value['email'],
+                        snapshot.value['phone'],
+                        snapshot.value['address'])),
+                ModalRoute.withName("/User"));
+          } else {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('User is not active'),
+            ));
+          }
         }
-
-
       });
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -326,13 +314,5 @@ class _LoginState extends State<Login> {
         ));
       }
     }
-  }
-
-
-  void saveSession(String type,String email,String password)async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('type', type);
-    await prefs.setString('email', email);
-    await prefs.setString('password', password);
   }
 }

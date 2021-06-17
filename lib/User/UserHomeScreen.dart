@@ -11,7 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart' as frs;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import '../Utils.dart';
 import 'OrderScreen.dart';
 import 'dart:async';
@@ -117,7 +117,7 @@ class _UserHomeState extends State<UserHome> {
       var initial = InitializationSettings(android, iossettings);
       local.initialize(initial);
       // Timer(Duration(milliseconds: 300), () {
-      getProducts("Drinks");
+      getProducts("Table");
       // });
     });
     _timeController.text = formatDate(
@@ -134,330 +134,247 @@ class _UserHomeState extends State<UserHome> {
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     dateTime = DateFormat.yMd().format(DateTime.now());
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.amber,
-        title: Text(title),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-            child: IconButton(
-                icon: Icon(Icons.shopping_cart_outlined),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => heart()));
-                }),
+    return DefaultTabController(
+        length: 2,
+        initialIndex: 0,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.amber,
+            title: Text(title),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                child: IconButton(
+                    icon: Icon(Icons.shopping_cart_outlined),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => heart()));
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                child: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      saveSession();
+                      logoutUser();
+                    }),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-            child: IconButton(
-                icon: Icon(Icons.clear),
-                onPressed: () {
-                  saveSession();
-                  logoutUser();
-                }),
-          ),
-        ],
-      ),
-      body: Builder(
-        builder: (context) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: (bottomNavigationIndex == 0)
-                      ? TextField(
-                          cursorColor: Colors.amber,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: new InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(40.0),
-                                  borderSide:
-                                      BorderSide(color: Color(0xf6f7fb))),
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(25, 15, 25, 15),
-                              isDense: true,
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(40.0),
+          body: Builder(
+            builder: (context) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: (bottomNavigationIndex == 0)
+                          ? TextField(
+                              cursorColor: Colors.amber,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: new InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(40.0),
+                                      borderSide:
+                                          BorderSide(color: Color(0xf6f7fb))),
+                                  contentPadding:
+                                      const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                                  isDense: true,
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(40.0),
+                                      ),
+                                      borderSide:
+                                          BorderSide(color: Color(0xf6f7fb))),
+                                  border: new OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0),
+                                    ),
                                   ),
-                                  borderSide:
-                                      BorderSide(color: Color(0xf6f7fb))),
-                              border: new OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(40.0),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  hintText: 'Search'),
+                              onChanged: (text) {
+                                setState(() {
+                                  search = text;
+
+                                  if (search.length != 0) {
+                                    newDataProducts = dataProducts
+                                        .where((element) =>
+                                            element.name.toLowerCase().contains(
+                                                search.toLowerCase()) &&
+                                            double.parse(element.price) >=
+                                                _lowerValue &&
+                                            double.parse(element.price) <=
+                                                _upperValue)
+                                        .toList();
+                                  } else {
+                                    newDataProducts = dataProducts
+                                        .where((element) =>
+                                            double.parse(element.price) >=
+                                                _lowerValue &&
+                                            double.parse(element.price) <=
+                                                _upperValue)
+                                        .toList();
+                                  }
+                                });
+                              },
+                            )
+                          : null,
+                    ),
+                    (bottomNavigationIndex == 0) ? Text('PRICE') : Container(),
+                    (bottomNavigationIndex == 0)
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: frs.RangeSlider(
+                              min: 0.0,
+                              max: 100000.0,
+                              lowerValue: _lowerValue,
+                              upperValue: _upperValue,
+                              divisions: 1000,
+                              showValueIndicator: true,
+                              valueIndicatorMaxDecimals: 1,
+                              onChanged:
+                                  (double newLowerValue, double newUpperValue) {
+                                setState(() {
+                                  _lowerValue = newLowerValue;
+                                  _upperValue = newUpperValue;
+
+                                  if (search.length != 0) {
+                                    newDataProducts = dataProducts
+                                        .where((element) =>
+                                            element.name.toLowerCase().contains(
+                                                search.toLowerCase()) &&
+                                            double.parse(element.price) >=
+                                                _lowerValue &&
+                                            double.parse(element.price) <=
+                                                _upperValue)
+                                        .toList();
+                                  } else {
+                                    newDataProducts = dataProducts
+                                        .where((element) =>
+                                            double.parse(element.price) >=
+                                                _lowerValue &&
+                                            double.parse(element.price) <=
+                                                _upperValue)
+                                        .toList();
+                                  }
+                                });
+                              },
+                            ),
+                          )
+                        : Container(),
+                    (bottomNavigationIndex == 0)
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.only(left: 15.0, right: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(_lowerValue.toString()),
+                                Text(_upperValue.toString())
+                              ],
+                            ),
+                          )
+                        : Container(),
+                    (bottomNavigationIndex == 0)
+                        ? Column(children: [
+                            SizedBox(
+                              height: 75,
+                              child: AppBar(
+                                backgroundColor: Colors.white,
+                                bottom: TabBar(
+                                  unselectedLabelColor: Colors.black,
+                                  labelColor: Colors.red,
+                                  onTap: (index) {
+                                    setState(() {
+                                      if (index == 0) {
+                                        setState(() {
+                                          cataName = "Table";
+                                        });
+
+                                        print(cataIndex);
+                                        print(cataName);
+                                        getProducts(cataName);
+                                      } else {
+                                        setState(() {
+                                          cataName = "Food";
+                                        });
+                                        print(cataIndex);
+                                        print(cataName);
+                                        getProducts(cataName);
+                                      }
+                                    });
+                                  },
+                                  tabs: [
+                                    Tab(
+                                        icon: Icon(Icons.table_chart),
+                                        text: "Table"),
+                                    Tab(
+                                        icon: Icon(Icons.food_bank),
+                                        text: "Food")
+                                  ],
                                 ),
                               ),
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              hintText: 'Search'),
-                          onChanged: (text) {
-                            setState(() {
-                              search = text;
-
-                              if (search.length != 0) {
-                                newDataProducts = dataProducts
-                                    .where((element) =>
-                                        element.name
-                                            .toLowerCase()
-                                            .contains(search.toLowerCase()) &&
-                                        double.parse(element.price) >=
-                                            _lowerValue &&
-                                        double.parse(element.price) <=
-                                            _upperValue)
-                                    .toList();
-                              } else {
-                                newDataProducts = dataProducts
-                                    .where((element) =>
-                                        double.parse(element.price) >=
-                                            _lowerValue &&
-                                        double.parse(element.price) <=
-                                            _upperValue)
-                                    .toList();
-                              }
-                            });
-                          },
-                        )
-                      : null,
+                            ),
+                          ])
+                        : Container(),
+                    Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: (bottomNavigationIndex == 0)
+                          ? gridProducts(context)
+                          : (bottomNavigationIndex == 1)
+                              ? orders(context)
+                              : mainScheduler(),
+                    ),
+                  ],
                 ),
-                (bottomNavigationIndex == 0) ? Text('PRICE') : Container(),
+              );
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.widgets_outlined),
+                  title: Text('Products'),
+                  backgroundColor: Colors.amberAccent),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart_outlined),
+                  title: Text('Orders'),
+                  backgroundColor: Colors.amberAccent),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.schedule),
+                  title: Text('Schedule'),
+                  backgroundColor: Colors.amberAccent),
+            ],
+            backgroundColor: Colors.amberAccent,
+            elevation: 5,
+            currentIndex: bottomNavigationIndex,
+            selectedItemColor: Colors.blue,
+            iconSize: 40,
+            onTap: (index) {
+              setState(() {
+                bottomNavigationIndex = index;
                 (bottomNavigationIndex == 0)
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                        child: frs.RangeSlider(
-                          min: 0.0,
-                          max: 100000.0,
-                          lowerValue: _lowerValue,
-                          upperValue: _upperValue,
-                          divisions: 1000,
-                          showValueIndicator: true,
-                          valueIndicatorMaxDecimals: 1,
-                          onChanged:
-                              (double newLowerValue, double newUpperValue) {
-                            setState(() {
-                              _lowerValue = newLowerValue;
-                              _upperValue = newUpperValue;
+                    ? title = "Products"
+                    : (bottomNavigationIndex == 1)
+                        ? title = "Orders"
+                        : title = "Schedule";
 
-                              if (search.length != 0) {
-                                newDataProducts = dataProducts
-                                    .where((element) =>
-                                        element.name
-                                            .toLowerCase()
-                                            .contains(search.toLowerCase()) &&
-                                        double.parse(element.price) >=
-                                            _lowerValue &&
-                                        double.parse(element.price) <=
-                                            _upperValue)
-                                    .toList();
-                              } else {
-                                newDataProducts = dataProducts
-                                    .where((element) =>
-                                        double.parse(element.price) >=
-                                            _lowerValue &&
-                                        double.parse(element.price) <=
-                                            _upperValue)
-                                    .toList();
-                              }
-                            });
-                          },
-                        ),
-                      )
-                    : Container(),
-                (bottomNavigationIndex == 0)
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(_lowerValue.toString()),
-                            Text(_upperValue.toString())
-                          ],
-                        ),
-                      )
-                    : Container(),
-                (bottomNavigationIndex == 0)
-                    ? Column(children: [
-                        new Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: new Text('Categories',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold))),
-                        ),
-                        Container(
-                          height: 100.0,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "Drinks";
-                                    });
-
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/5.jpg',
-                                    image_caption: 'Drinks',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "Sauces";
-                                    });
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/6.jpg',
-                                    image_caption: 'Sauces',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "Frozen Foods";
-                                    });
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/7.jpg',
-                                    image_caption: 'Frozen Foods',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "Snacks";
-                                    });
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/8.jpg',
-                                    image_caption: 'Snacks',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "Grocery & Staples";
-                                    });
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/1.jpg',
-                                    image_caption: 'Grocery & Staples',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "Gram";
-                                    });
-
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/2.png',
-                                    image_caption: 'Gram',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = "HouseHold";
-                                    });
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/3.jpg',
-                                    image_caption: 'HouseHold',
-                                  )),
-                              GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      cataName = " Breakfast & Dairy";
-                                    });
-                                    print(cataIndex);
-                                    print(cataName);
-                                    getProducts(cataName);
-                                  },
-                                  child: Category(
-                                    image_location: 'assets/4.jpg',
-                                    image_caption: ' Breakfast & Dairy',
-                                  )),
-                            ],
-                          ),
-                        )
-                      ])
-                    : Container(),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: (bottomNavigationIndex == 0)
-                      ? gridProducts(context)
-                      : (bottomNavigationIndex == 1)
-                          ? orders(context)
-                          : mainScheduler(),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.widgets_outlined),
-              title: Text('Products'),
-              backgroundColor: Colors.amberAccent),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
-              title: Text('Orders'),
-              backgroundColor: Colors.amberAccent),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.schedule),
-              title: Text('Schedule'),
-              backgroundColor: Colors.amberAccent),
-        ],
-        backgroundColor: Colors.amberAccent,
-        elevation: 5,
-        currentIndex: bottomNavigationIndex,
-        selectedItemColor: Colors.blue,
-        iconSize: 40,
-        onTap: (index) {
-          setState(() {
-            bottomNavigationIndex = index;
-            (bottomNavigationIndex == 0)
-                ? title = "Products"
-                : (bottomNavigationIndex == 1)
-                    ? title = "Orders"
-                    : title = "Schedule";
-
-            if (index == 0) {
-              getProducts("Drinks");
-            }
-            if (index == 1) {
-              getOrders();
-            }
-          });
-        },
-      ),
-    );
+                if (index == 0) {
+                  getProducts("Table");
+                }
+                if (index == 1) {
+                  getOrders();
+                }
+              });
+            },
+          ),
+        ));
   }
 
   Widget products(BuildContext context) {
@@ -548,7 +465,7 @@ class _UserHomeState extends State<UserHome> {
               child: new Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.17,
+                    height: MediaQuery.of(context).size.height * 0.23,
                     width: MediaQuery.of(context).size.width,
                     child: Image.network(
                       newDataProducts[index].image,
@@ -557,9 +474,10 @@ class _UserHomeState extends State<UserHome> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
+                    // height: 40,
                     color: Colors.grey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      // mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
@@ -728,8 +646,46 @@ class _UserHomeState extends State<UserHome> {
                                   height: 45.0,
                                   child: RaisedButton(
                                     onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return Dialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            40)),
+                                                elevation: 18,
+                                                child: Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.2,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.35,
+                                                  child: Column(
+                                                    children: [
+                                                      Center(
+                                                        child: Text(
+                                                            "Give feedback to us please \n for further batterment"),
+                                                      ),
+                                                      Divider(
+                                                          color: Colors.yellow,
+                                                          thickness: 5),
+                                                      TextField(
+                                                          cursorColor:
+                                                              Colors.yellow,
+                                                          decoration:
+                                                              new InputDecoration(
+                                                                  hintText:
+                                                                      "Place your feedback")),
+                                                    ],
+                                                  ),
+                                                ));
+                                          });
+
                                       updateStatus(index);
-                                      //orderProduct();
                                     },
                                     color: Colors.amber,
                                     child: Text(
