@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/adilfinal/ecommerce_fyp/BuildConfig.java
+ com.adilfinal.ecommerce_fyp.BuildConfig

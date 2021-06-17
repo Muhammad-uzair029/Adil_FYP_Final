@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">496563009258-93bi7o2gll0q5gr2vdkcq38o6k68uktm.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://sendfile-db5c7-default-rtdb.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">496563009258</string>
+    <string name="google_api_key" translatable="false">AIzaSyCUEr-vbNhHnrYWGNyItrl3RJdrcr9GsVQ</string>
+    <string name="google_app_id" translatable="false">1:496563009258:android:cca2acc4d126de6705c993</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCUEr-vbNhHnrYWGNyItrl3RJdrcr9GsVQ</string>
+    <string name="google_storage_bucket" translatable="false">sendfile-db5c7.appspot.com</string>
+    <string name="project_id" translatable="false">sendfile-db5c7</string>
+</resources>
