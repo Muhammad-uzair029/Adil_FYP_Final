@@ -3,6 +3,6 @@
 3    package="com.ko2ic.imagedownloader" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->C:\flutter\.pub-cache\hosted\pub.flutter-io.cn\image_downloader-0.20.1\android\src\main\AndroidManifest.xml
+5-->D:\flutter\.pub-cache\hosted\pub.flutter-io.cn\image_downloader-0.20.1\android\src\main\AndroidManifest.xml
 6
 7</manifest>

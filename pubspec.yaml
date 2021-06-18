@@ -71,7 +71,8 @@ dependencies:
   path_provider: any
   date_format: any
   toggle_bar:
-  awesome_dialog:
+  awesome_dialog: 
+  device_preview:
 
 dev_dependencies:
   flutter_test:

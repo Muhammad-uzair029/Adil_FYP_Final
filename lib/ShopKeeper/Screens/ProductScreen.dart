@@ -65,8 +65,8 @@ class _ProductState extends State<Product> {
           ),
           body: TabBarView(
             children: [
-              CommonPotion(),
-              CommonPotion(),
+              SingleChildScrollView(child: CommonPotion()),
+              SingleChildScrollView(child: CommonPotion()),
             ],
           ),
 

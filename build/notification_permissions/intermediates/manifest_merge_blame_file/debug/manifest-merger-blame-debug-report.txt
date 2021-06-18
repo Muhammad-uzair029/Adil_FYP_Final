@@ -3,6 +3,6 @@
 3    package="com.vanethos.notification_permissions" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->C:\flutter\.pub-cache\hosted\pub.flutter-io.cn\notification_permissions-0.4.8\android\src\main\AndroidManifest.xml
+5-->D:\flutter\.pub-cache\hosted\pub.flutter-io.cn\notification_permissions-0.4.8\android\src\main\AndroidManifest.xml
 6
 7</manifest>

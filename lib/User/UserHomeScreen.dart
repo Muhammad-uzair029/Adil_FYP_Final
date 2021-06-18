@@ -34,14 +34,9 @@ import 'package:ecommerce_fyp/Add_fvrt/fvrt_list.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:page_transition/page_transition.dart';
 import '../Utils.dart';
-import 'OrderScreen.dart';
-import 'package:toggle_bar/toggle_bar.dart';
-import 'package:ecommerce_fyp/User/Components/horizontal_listview.dart';
 import 'package:ecommerce_fyp/User/Notifiction/notificationPlugin.dart';
 import 'package:date_format/date_format.dart';
-import 'package:ecommerce_fyp/User/UserHomeScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:intl/intl.dart';
 
 class UserHome extends StatefulWidget {
@@ -88,6 +83,7 @@ class _UserHomeState extends State<UserHome> {
   _UserHomeState(this._name, this._email, this._mobile, this._address);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _firestore = FirebaseFirestore.instance;
+  TextEditingController feedbackController = new TextEditingController();
 
   int cataIndex = 0;
   String cataName = "";
@@ -103,6 +99,9 @@ class _UserHomeState extends State<UserHome> {
       'token': Global.fbtoken,
     });
   }
+
+  final databaseRef =
+      FirebaseDatabase.instance.reference(); //database reference object
 
   @override
   void initState() {
@@ -322,7 +321,8 @@ class _UserHomeState extends State<UserHome> {
                             ),
                           ])
                         : Container(),
-                    Container(
+                    SingleChildScrollView(
+                        child: Container(
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       child: (bottomNavigationIndex == 0)
@@ -330,7 +330,7 @@ class _UserHomeState extends State<UserHome> {
                           : (bottomNavigationIndex == 1)
                               ? orders(context)
                               : mainScheduler(),
-                    ),
+                    )),
                   ],
                 ),
               );
@@ -646,45 +646,58 @@ class _UserHomeState extends State<UserHome> {
                                   height: 45.0,
                                   child: RaisedButton(
                                     onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return Dialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40)),
-                                                elevation: 18,
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.2,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                                  child: Column(
-                                                    children: [
-                                                      Center(
-                                                        child: Text(
-                                                            "Give feedback to us please \n for further batterment"),
-                                                      ),
-                                                      Divider(
-                                                          color: Colors.yellow,
-                                                          thickness: 5),
-                                                      TextField(
-                                                          cursorColor:
-                                                              Colors.yellow,
-                                                          decoration:
-                                                              new InputDecoration(
-                                                                  hintText:
-                                                                      "Place your feedback")),
-                                                    ],
-                                                  ),
-                                                ));
-                                          });
-
+                                      Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40)),
+                                          elevation: 18,
+                                          child: Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.4,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.35,
+                                            child: Column(
+                                              children: [
+                                                Center(
+                                                    child: Text(
+                                                  "Give feedback to us please\n  for further batterment",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )),
+                                                Divider(
+                                                    color: Colors.yellow,
+                                                    thickness: 5),
+                                                TextField(
+                                                    controller:
+                                                        feedbackController,
+                                                    cursorColor: Colors.yellow,
+                                                    decoration: new InputDecoration(
+                                                        hintText:
+                                                            "Place your feedback")),
+                                                SizedBox(height: 30.0),
+                                                Center(
+                                                    child: RaisedButton(
+                                                        color:
+                                                            Colors.pinkAccent,
+                                                        child: Text("Submit"),
+                                                        onPressed: () {
+                                                          databaseRef
+                                                              .push()
+                                                              .set({
+                                                            'Feedback':
+                                                                feedbackController
+                                                                    .text
+                                                          });
+                                                        })),
+                                              ],
+                                            ),
+                                          ));
                                       updateStatus(index);
                                     },
                                     color: Colors.amber,
