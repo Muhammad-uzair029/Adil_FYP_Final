@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ecommerce_fyp/Admin/Model/UserListModel.dart';
+import 'package:ecommerce_fyp/Admin/Model/feedback.dart';
 import 'package:ecommerce_fyp/Authentication/UserTypeScreen.dart';
 import 'package:ecommerce_fyp/Global.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Utils.dart';
 import 'Model/ShopkeeperListModel.dart';
+import 'Model/feedback.dart';
 
 class AdminHome extends StatefulWidget {
   @override
@@ -23,11 +25,15 @@ class _AdminHomeState extends State<AdminHome> {
   String title = "Users";
   List<UserListModel> userListData = new List();
   List<ShopkeeperListModel> shopKeeperListData = new List();
+  List<Feedbacks> feedbacksListData = new List();
+  final databaseRefFeedback =
+      FirebaseDatabase.instance.reference().child("Feedback").child("Feedback");
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Timer(Duration(milliseconds: 300), () {
       getUserData();
     });
@@ -55,12 +61,13 @@ class _AdminHomeState extends State<AdminHome> {
       body: Builder(
         builder: (context) {
           return Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: (bottomNavigationIndex == 0)
-                ? users(context)
-                : shopkeepers(context),
-          );
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: (bottomNavigationIndex == 0)
+                  ? users(context)
+                  : (bottomNavigationIndex == 1)
+                      ? shopkeepers(context)
+                      : getFeedback(context));
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -73,6 +80,10 @@ class _AdminHomeState extends State<AdminHome> {
               icon: Icon(Icons.attribution_rounded),
               title: Text('Shopkeepers'),
               backgroundColor: Colors.amberAccent),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.feedback_outlined),
+              title: Text('Feedbacks'),
+              backgroundColor: Colors.amberAccent),
         ],
         backgroundColor: Colors.amberAccent,
         elevation: 5,
@@ -84,19 +95,42 @@ class _AdminHomeState extends State<AdminHome> {
             bottomNavigationIndex = index;
             (bottomNavigationIndex == 0)
                 ? title = "User"
-                : title = "ShopKeepers";
+                : (bottomNavigationIndex == 1)
+                    ? title = "ShopKeepers"
+                    : title = "Feedback";
 
             if (index == 0) {
               userListData.clear();
               getUserData();
-            } else {
+            } else if (index == 1) {
               shopKeeperListData.clear();
               getShopkeeperData();
+            } else {
+              getfeedbackData();
             }
           });
         },
       ),
     );
+  }
+
+  Widget getFeedback(BuildContext context) {
+    return ListView.builder(
+        // Let the ListView know how many items it needs to build.
+        itemCount: feedbacksListData.length,
+        // Provide a builder function. This is where the magic happens.
+        // Convert each item into a widget based on the type of item it is.
+        itemBuilder: (context, index) {
+          return Container(
+              child: Column(children: [
+            Card(
+                elevation: 7,
+                child: ListTile(
+                  title: Text(feedbacksListData[index].feedback),
+                  subtitle: Text("From Anonymous"),
+                )),
+          ]));
+        });
   }
 
   Widget users(BuildContext context) {
@@ -330,6 +364,28 @@ class _AdminHomeState extends State<AdminHome> {
     });
   }
 
+  void getfeedbackData() async {
+    feedbacksListData.clear();
+    Utils.loader(context);
+    DatabaseReference databaseReference =
+        FirebaseDatabase.instance.reference().child('Feedback');
+    await databaseReference.once().then((DataSnapshot snapshot) {
+      print('Feedback : ${snapshot.value}');
+      Navigator.pop(context);
+
+      if (snapshot != null) {
+        Map<dynamic, dynamic> values = snapshot.value;
+        values.forEach((key, values) {
+          print("This is the key brother");
+          setState(() {
+            feedbacksListData.add(new Feedbacks(values['Feedback']));
+          });
+          print(feedbacksListData);
+        });
+      } else {}
+    });
+  }
+
   void setActive(String type, int position, int value) async {
     Utils.loader(context);
     DatabaseReference databaseReference = FirebaseDatabase.instance
@@ -339,8 +395,6 @@ class _AdminHomeState extends State<AdminHome> {
             ? userListData[position].key
             : shopKeeperListData[position].key);
     await databaseReference.update({'active': value});
-
-
 
     setState(() {
       if (type == 'user') {
@@ -361,29 +415,27 @@ class _AdminHomeState extends State<AdminHome> {
     });
   }
 
-
-  void setProductActive(String id,int value)async{
+  void setProductActive(String id, int value) async {
     print(id);
     DatabaseReference databaseReference =
-    FirebaseDatabase.instance.reference().child('products');
+        FirebaseDatabase.instance.reference().child('products');
     await databaseReference.once().then((DataSnapshot snapshot) {
       Navigator.pop(context);
 
       if (snapshot != null) {
         Map<dynamic, dynamic> values = snapshot.value;
         values.forEach((key, values) async {
-          if(id == values['user'] ){
-            DatabaseReference databaseReference =
-            FirebaseDatabase.instance.reference().child('products').child(key);
-           await databaseReference.update({'active':value});
+          if (id == values['user']) {
+            DatabaseReference databaseReference = FirebaseDatabase.instance
+                .reference()
+                .child('products')
+                .child(key);
+            await databaseReference.update({'active': value});
           }
         });
       } else {}
     });
   }
-
-  
-
 
   logoutUser() async {
     Utils.loader(context);
@@ -393,7 +445,7 @@ class _AdminHomeState extends State<AdminHome> {
         context, MaterialPageRoute(builder: (context) => UserType()));
   }
 
-  void saveSession()async{
+  void saveSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('type', "");
     await prefs.setString('email', "");
@@ -508,6 +560,4 @@ class Bottomsheet extends StatelessWidget {
       ),
     );
   }
-
-
 }
