@@ -100,8 +100,9 @@ class _UserHomeState extends State<UserHome> {
     });
   }
 
-  final databaseRef =
-      FirebaseDatabase.instance.reference(); //database reference object
+  final databaseRefFeedback = FirebaseDatabase.instance
+      .reference()
+      .child("Feedback"); //database reference object
 
   @override
   void initState() {
@@ -440,65 +441,56 @@ class _UserHomeState extends State<UserHome> {
             crossAxisCount: 2, crossAxisSpacing: 2.0, mainAxisSpacing: 2.0),
         itemBuilder: (context, index) {
           return InkResponse(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Order(
-                    _name,
-                    dataProducts[index].description,
-                    _email,
-                    _mobile,
-                    _address,
-                    newDataProducts[index].name,
-                    newDataProducts[index].price,
-                    newDataProducts[index].id,
-                    newDataProducts[index].user,
-                    newDataProducts[index].image);
-              }));
-            },
-            child: Card(
-              semanticContainer: true,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 3.0,
-              child: new Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.23,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      newDataProducts[index].image,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    // height: 40,
-                    color: Colors.grey,
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          newDataProducts[index].name,
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Order(
+                      _name,
+                      dataProducts[index].description,
+                      _email,
+                      _mobile,
+                      _address,
+                      newDataProducts[index].name,
+                      newDataProducts[index].price,
+                      newDataProducts[index].id,
+                      newDataProducts[index].user,
+                      newDataProducts[index].image);
+                }));
+              },
+              child: GridTile(
+                footer: GridTileBar(
+                  title: Column(
+                    children: [
+                      Text(
+                        newDataProducts[index].name,
+                        style: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text("Rs. " + newDataProducts[index].price,
                           style: TextStyle(
-                              color: Colors.amber,
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text("Rs. " + newDataProducts[index].price,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold)),
-                      ],
+                              color: Colors.yellow,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+                child: Card(
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
-                  )
-                ],
-              ),
-            ),
-          );
+                    elevation: 3.0,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.23,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.network(
+                        newDataProducts[index].image,
+                        fit: BoxFit.fill,
+                      ),
+                    )),
+              ));
         });
   }
 
@@ -646,58 +638,7 @@ class _UserHomeState extends State<UserHome> {
                                   height: 45.0,
                                   child: RaisedButton(
                                     onPressed: () {
-                                      Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40)),
-                                          elevation: 18,
-                                          child: Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.4,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.35,
-                                            child: Column(
-                                              children: [
-                                                Center(
-                                                    child: Text(
-                                                  "Give feedback to us please\n  for further batterment",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )),
-                                                Divider(
-                                                    color: Colors.yellow,
-                                                    thickness: 5),
-                                                TextField(
-                                                    controller:
-                                                        feedbackController,
-                                                    cursorColor: Colors.yellow,
-                                                    decoration: new InputDecoration(
-                                                        hintText:
-                                                            "Place your feedback")),
-                                                SizedBox(height: 30.0),
-                                                Center(
-                                                    child: RaisedButton(
-                                                        color:
-                                                            Colors.pinkAccent,
-                                                        child: Text("Submit"),
-                                                        onPressed: () {
-                                                          databaseRef
-                                                              .push()
-                                                              .set({
-                                                            'Feedback':
-                                                                feedbackController
-                                                                    .text
-                                                          });
-                                                        })),
-                                              ],
-                                            ),
-                                          ));
+                                      _showFedbackDialog();
                                       updateStatus(index);
                                     },
                                     color: Colors.amber,
@@ -1053,5 +994,78 @@ class _UserHomeState extends State<UserHome> {
     //     MaterialPageRoute(
     //       builder: (context) => whatsApp_Messagner(),
     //     ));
+  }
+
+  _showFedbackDialog() async {
+    await showDialog<String>(
+      context: context,
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: Container(
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(40)),
+                height: MediaQuery.of(context).size.height * 0.2,
+                width: MediaQuery.of(context).size.width * 0.35,
+                child: Column(
+                  children: [
+                    Center(
+                        child: Text(
+                      "Give feedback to us please\n  for further batterment",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
+                    Divider(color: Colors.yellow, thickness: 5),
+                    TextField(
+                        controller: feedbackController,
+                        cursorColor: Colors.yellow,
+                        decoration: new InputDecoration(
+                            hintText: "Place your feedback")),
+                  ],
+                ),
+              ),
+
+              //  new TextField(
+              //   autofocus: true,
+              //   decoration: new InputDecoration(
+              //       labelText: 'Full Name', hintText: 'eg. John Smith'),
+              // ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: const Text('Submit'),
+              onPressed: () {
+                databaseRefFeedback
+                    .push()
+                    .set({'Feedback': feedbackController.text});
+                Navigator.pop(context);
+                AwesomeDialog(
+                    context: context,
+                    animType: AnimType.LEFTSLIDE,
+                    headerAnimationLoop: false,
+                    dialogType: DialogType.SUCCES,
+                    title: 'Submitted',
+                    desc: 'Thanks For submitting your feeback',
+                    btnOkOnPress: () {
+                      debugPrint('OnClcik');
+                    },
+                    btnOkIcon: Icons.check_circle,
+                    onDissmissCallback: () {
+                      debugPrint('Dialog Dissmiss from callback');
+                    })
+                  ..show();
+              })
+        ],
+      ),
+    );
   }
 }
