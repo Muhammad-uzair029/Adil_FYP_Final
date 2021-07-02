@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Utils.dart';
-import 'Model/ShopkeeperListModel.dart';
+import 'Model/HotelStaffListModel.dart';
 import 'Model/feedback.dart';
 
 class AdminHome extends StatefulWidget {
@@ -24,7 +24,7 @@ class _AdminHomeState extends State<AdminHome> {
   int bottomNavigationIndex = 0;
   String title = "Users";
   List<UserListModel> userListData = new List();
-  List<ShopkeeperListModel> shopKeeperListData = new List();
+  List<HotelStaffListModel> HotelStaffListData = new List();
   List<Feedbacks> feedbacksListData = new List();
   final databaseRefFeedback =
       FirebaseDatabase.instance.reference().child("Feedback").child("Feedback");
@@ -44,7 +44,7 @@ class _AdminHomeState extends State<AdminHome> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.redAccent,
         title: Text(title),
         actions: [
           Padding(
@@ -66,7 +66,7 @@ class _AdminHomeState extends State<AdminHome> {
               child: (bottomNavigationIndex == 0)
                   ? users(context)
                   : (bottomNavigationIndex == 1)
-                      ? shopkeepers(context)
+                      ? HotelStaffs(context)
                       : getFeedback(context));
         },
       ),
@@ -75,17 +75,17 @@ class _AdminHomeState extends State<AdminHome> {
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle_outlined),
               title: Text('Users'),
-              backgroundColor: Colors.amberAccent),
+              backgroundColor: Colors.redAccent),
           BottomNavigationBarItem(
               icon: Icon(Icons.attribution_rounded),
-              title: Text('Shopkeepers'),
-              backgroundColor: Colors.amberAccent),
+              title: Text('HotelStaffs'),
+              backgroundColor: Colors.redAccent),
           BottomNavigationBarItem(
               icon: Icon(Icons.feedback_outlined),
               title: Text('Feedbacks'),
-              backgroundColor: Colors.amberAccent),
+              backgroundColor: Colors.redAccent),
         ],
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Colors.redAccent,
         elevation: 5,
         currentIndex: bottomNavigationIndex,
         selectedItemColor: Colors.blue,
@@ -96,15 +96,15 @@ class _AdminHomeState extends State<AdminHome> {
             (bottomNavigationIndex == 0)
                 ? title = "User"
                 : (bottomNavigationIndex == 1)
-                    ? title = "ShopKeepers"
+                    ? title = "HotelStaffs"
                     : title = "Feedback";
 
             if (index == 0) {
               userListData.clear();
               getUserData();
             } else if (index == 1) {
-              shopKeeperListData.clear();
-              getShopkeeperData();
+              HotelStaffListData.clear();
+              getHotelStaffData();
             } else {
               getfeedbackData();
             }
@@ -154,7 +154,7 @@ class _AdminHomeState extends State<AdminHome> {
                             child: Text(
                               userListData[index].name,
                               style: TextStyle(
-                                  color: Colors.amber, fontSize: 15.0),
+                                  color: Colors.redAccent, fontSize: 15.0),
                             ),
                           ),
                           Padding(
@@ -241,11 +241,11 @@ class _AdminHomeState extends State<AdminHome> {
     );
   }
 
-  Widget shopkeepers(BuildContext context) {
+  Widget HotelStaffs(BuildContext context) {
     return Container(
-      child: shopKeeperListData.length != 0
+      child: HotelStaffListData.length != 0
           ? ListView.builder(
-              itemCount: shopKeeperListData.length,
+              itemCount: HotelStaffListData.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   height: 60.0,
@@ -260,16 +260,16 @@ class _AdminHomeState extends State<AdminHome> {
                             padding:
                                 const EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
                             child: Text(
-                              shopKeeperListData[index].name,
+                              HotelStaffListData[index].name,
                               style: TextStyle(
-                                  color: Colors.amber, fontSize: 15.0),
+                                  color: Colors.redAccent, fontSize: 15.0),
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.fromLTRB(10.0, 5.0, 0.0, 0.0),
                             child: Text(
-                              shopKeeperListData[index].email,
+                              HotelStaffListData[index].email,
                               style: TextStyle(
                                   color: Colors.black, fontSize: 15.0),
                             ),
@@ -284,7 +284,7 @@ class _AdminHomeState extends State<AdminHome> {
                           child: RaisedButton(
                             onPressed: () {
                               setState(() {
-                                if (shopKeeperListData[index].getActive() ==
+                                if (HotelStaffListData[index].getActive() ==
                                     0) {
                                   setActive('shopkeeper', index, 1);
                                 } else {
@@ -292,11 +292,11 @@ class _AdminHomeState extends State<AdminHome> {
                                 }
                               });
                             },
-                            color: (shopKeeperListData[index].getActive() == 0)
+                            color: (HotelStaffListData[index].getActive() == 0)
                                 ? Colors.green
                                 : Colors.red,
                             child: Text(
-                              (shopKeeperListData[index].getActive() == 0)
+                              (HotelStaffListData[index].getActive() == 0)
                                   ? 'Activate'
                                   : 'Deactivate',
                               style: TextStyle(
@@ -340,7 +340,7 @@ class _AdminHomeState extends State<AdminHome> {
     });
   }
 
-  void getShopkeeperData() async {
+  void getHotelStaffData() async {
     Utils.loader(context);
     DatabaseReference databaseReference =
         FirebaseDatabase.instance.reference().child('shopkeeper');
@@ -351,7 +351,7 @@ class _AdminHomeState extends State<AdminHome> {
         Map<dynamic, dynamic> values = snapshot.value;
         values.forEach((key, values) {
           setState(() {
-            shopKeeperListData.add(new ShopkeeperListModel(
+            HotelStaffListData.add(new HotelStaffListModel(
                 key,
                 values['address'],
                 values['phone'],
@@ -393,7 +393,7 @@ class _AdminHomeState extends State<AdminHome> {
         .child(type)
         .child((type == 'user')
             ? userListData[position].key
-            : shopKeeperListData[position].key);
+            : HotelStaffListData[position].key);
     await databaseReference.update({'active': value});
 
     setState(() {
@@ -405,12 +405,12 @@ class _AdminHomeState extends State<AdminHome> {
         }
         Navigator.pop(context);
       } else {
-        if (shopKeeperListData[position].getActive() == 0) {
-          shopKeeperListData[position].setActive(1);
+        if (HotelStaffListData[position].getActive() == 0) {
+          HotelStaffListData[position].setActive(1);
         } else {
-          shopKeeperListData[position].setActive(0);
+          HotelStaffListData[position].setActive(0);
         }
-        setProductActive(shopKeeperListData[position].key, value);
+        setProductActive(HotelStaffListData[position].key, value);
       }
     });
   }

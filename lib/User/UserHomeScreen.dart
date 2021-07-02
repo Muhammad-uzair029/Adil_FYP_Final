@@ -3,8 +3,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fyp/Authentication/UserTypeScreen.dart';
 import 'package:ecommerce_fyp/Global.dart';
-import 'package:ecommerce_fyp/ShopKeeper/Model/ShopKeeperOrdersModel.dart';
-import 'package:ecommerce_fyp/ShopKeeper/Model/ShopKeeperProductsModel.dart';
+import 'package:ecommerce_fyp/HotelStaff/Model/HotelStaffOrdersModel.dart';
+import 'package:ecommerce_fyp/HotelStaff/Model/HotelStaffProductsModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,8 +21,8 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fyp/Authentication/UserTypeScreen.dart';
 import 'package:ecommerce_fyp/Global.dart';
-import 'package:ecommerce_fyp/ShopKeeper/Model/ShopKeeperOrdersModel.dart';
-import 'package:ecommerce_fyp/ShopKeeper/Model/ShopKeeperProductsModel.dart';
+import 'package:ecommerce_fyp/HotelStaff/Model/HotelStaffOrdersModel.dart';
+import 'package:ecommerce_fyp/HotelStaff/Model/HotelStaffProductsModel.dart';
 import 'package:ecommerce_fyp/User/Notifiction/Date_time/Timer_used.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -76,9 +76,9 @@ class _UserHomeState extends State<UserHome> {
   int bottomNavigationIndex = 0;
   String title = "Products";
   String search = "";
-  List<ShopKeeperProductsModel> dataProducts = new List();
-  List<ShopKeeperProductsModel> newDataProducts = new List();
-  List<ShopKeeperOrdersModel> dataOrders = new List();
+  List<HotelStaffProductsModel> dataProducts = new List();
+  List<HotelStaffProductsModel> newDataProducts = new List();
+  List<HotelStaffOrdersModel> dataOrders = new List();
 
   _UserHomeState(this._name, this._email, this._mobile, this._address);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -140,7 +140,7 @@ class _UserHomeState extends State<UserHome> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.amber,
+            backgroundColor: Colors.redAccent,
             title: Text(title),
             actions: [
               Padding(
@@ -172,7 +172,7 @@ class _UserHomeState extends State<UserHome> {
                       padding: const EdgeInsets.all(8.0),
                       child: (bottomNavigationIndex == 0)
                           ? TextField(
-                              cursorColor: Colors.amber,
+                              cursorColor: Colors.redAccent,
                               keyboardType: TextInputType.emailAddress,
                               decoration: new InputDecoration(
                                   enabledBorder: OutlineInputBorder(
@@ -342,17 +342,17 @@ class _UserHomeState extends State<UserHome> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.widgets_outlined),
                   title: Text('Products'),
-                  backgroundColor: Colors.amberAccent),
+                  backgroundColor: Colors.redAccent),
               BottomNavigationBarItem(
                   icon: Icon(Icons.shopping_cart_outlined),
                   title: Text('Orders'),
-                  backgroundColor: Colors.amberAccent),
+                  backgroundColor: Colors.redAccent),
               BottomNavigationBarItem(
                   icon: Icon(Icons.schedule),
                   title: Text('Schedule'),
-                  backgroundColor: Colors.amberAccent),
+                  backgroundColor: Colors.redAccent),
             ],
-            backgroundColor: Colors.amberAccent,
+            backgroundColor: Colors.redAccent,
             elevation: 5,
             currentIndex: bottomNavigationIndex,
             selectedItemColor: Colors.blue,
@@ -396,7 +396,7 @@ class _UserHomeState extends State<UserHome> {
                   ),
                   subtitle: Text(
                     "Rs. " + dataProducts[index].price,
-                    style: TextStyle(fontSize: 15.0, color: Colors.amber),
+                    style: TextStyle(fontSize: 15.0, color: Colors.redAccent),
                   ),
                   leading: CircleAvatar(
                     radius: 30.0,
@@ -411,6 +411,7 @@ class _UserHomeState extends State<UserHome> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return Order(
+                            cataName,
                             _name,
                             dataProducts[index].description,
                             _email,
@@ -444,6 +445,7 @@ class _UserHomeState extends State<UserHome> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return Order(
+                      cataName,
                       _name,
                       dataProducts[index].description,
                       _email,
@@ -463,7 +465,7 @@ class _UserHomeState extends State<UserHome> {
                       Text(
                         newDataProducts[index].name,
                         style: TextStyle(
-                            color: Colors.amber,
+                            color: Colors.redAccent,
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold),
                       ),
@@ -503,7 +505,7 @@ class _UserHomeState extends State<UserHome> {
     await databaseReference.update({'shippingstatus': 'Received'});
     _firestore
         .collection('usertoken')
-        .doc(dataOrders[position].shopkeeperID)
+        .doc(dataOrders[position].HotelStaffID)
         .get()
         .then((value) {
       if (value.exists) {
@@ -578,7 +580,7 @@ class _UserHomeState extends State<UserHome> {
                                 Text(
                                   dataOrders[index].productName.toUpperCase(),
                                   style: TextStyle(
-                                      fontSize: 12.0, color: Colors.amber),
+                                      fontSize: 12.0, color: Colors.redAccent),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
@@ -605,7 +607,7 @@ class _UserHomeState extends State<UserHome> {
                                       ? "Pending"
                                       : "Completed",
                                   style: TextStyle(
-                                      fontSize: 12.0, color: Colors.amber),
+                                      fontSize: 12.0, color: Colors.redAccent),
                                 ),
                               ],
                             ),
@@ -622,7 +624,7 @@ class _UserHomeState extends State<UserHome> {
                                       ? "----"
                                       : dataOrders[index].shippingstatus,
                                   style: TextStyle(
-                                      fontSize: 12.0, color: Colors.amber),
+                                      fontSize: 12.0, color: Colors.redAccent),
                                 ),
                               ],
                             ),
@@ -641,7 +643,7 @@ class _UserHomeState extends State<UserHome> {
                                       _showFedbackDialog();
                                       updateStatus(index);
                                     },
-                                    color: Colors.amber,
+                                    color: Colors.redAccent,
                                     child: Text(
                                       'Delivered?',
                                       style: TextStyle(
@@ -702,7 +704,7 @@ class _UserHomeState extends State<UserHome> {
         Map<dynamic, dynamic> values = snapshot.value;
         values.forEach((key, values) {
           setState(() {
-            dataProducts.add(new ShopKeeperProductsModel(
+            dataProducts.add(new HotelStaffProductsModel(
                 key,
                 values['image'],
                 values['name'],
@@ -728,7 +730,7 @@ class _UserHomeState extends State<UserHome> {
         values.forEach((key, values) {
           setState(() {
             if (values['user_id'] == FirebaseAuth.instance.currentUser.uid)
-              dataOrders.add(new ShopKeeperOrdersModel(
+              dataOrders.add(new HotelStaffOrdersModel(
                   key,
                   values['user_id'],
                   values['user_name'],
@@ -738,7 +740,7 @@ class _UserHomeState extends State<UserHome> {
                   values['product_id'],
                   values['product_name'],
                   values['product_price'],
-                  values['shopkeeper_id'],
+                  values['HotelStaff_id'],
                   values['status'],
                   values['shippingstatus']));
           });
@@ -998,74 +1000,76 @@ class _UserHomeState extends State<UserHome> {
 
   _showFedbackDialog() async {
     await showDialog<String>(
-      context: context,
-      child: AlertDialog(
-        contentPadding: const EdgeInsets.all(16.0),
-        content: new Row(
-          children: <Widget>[
-            new Expanded(
-              child: Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(40)),
-                height: MediaQuery.of(context).size.height * 0.2,
-                width: MediaQuery.of(context).size.width * 0.35,
-                child: Column(
-                  children: [
-                    Center(
-                        child: Text(
-                      "Give feedback to us please\n  for further batterment",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-                    Divider(color: Colors.yellow, thickness: 5),
-                    TextField(
-                        controller: feedbackController,
-                        cursorColor: Colors.yellow,
-                        decoration: new InputDecoration(
-                            hintText: "Place your feedback")),
-                  ],
-                ),
-              ),
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(16.0),
+            content: new Row(
+              children: <Widget>[
+                new Expanded(
+                  child: Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(40)),
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.35,
+                    child: Column(
+                      children: [
+                        Center(
+                            child: Text(
+                          "Give feedback to us please\n  for further batterment",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                        Divider(color: Colors.yellow, thickness: 5),
+                        TextField(
+                            controller: feedbackController,
+                            cursorColor: Colors.yellow,
+                            decoration: new InputDecoration(
+                                hintText: "Place your feedback")),
+                      ],
+                    ),
+                  ),
 
-              //  new TextField(
-              //   autofocus: true,
-              //   decoration: new InputDecoration(
-              //       labelText: 'Full Name', hintText: 'eg. John Smith'),
-              // ),
-            )
-          ],
-        ),
-        actions: <Widget>[
-          new FlatButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          new FlatButton(
-              child: const Text('Submit'),
-              onPressed: () {
-                databaseRefFeedback
-                    .push()
-                    .set({'Feedback': feedbackController.text});
-                Navigator.pop(context);
-                AwesomeDialog(
-                    context: context,
-                    animType: AnimType.LEFTSLIDE,
-                    headerAnimationLoop: false,
-                    dialogType: DialogType.SUCCES,
-                    title: 'Submitted',
-                    desc: 'Thanks For submitting your feeback',
-                    btnOkOnPress: () {
-                      debugPrint('OnClcik');
-                    },
-                    btnOkIcon: Icons.check_circle,
-                    onDissmissCallback: () {
-                      debugPrint('Dialog Dissmiss from callback');
-                    })
-                  ..show();
-              })
-        ],
-      ),
-    );
+                  //  new TextField(
+                  //   autofocus: true,
+                  //   decoration: new InputDecoration(
+                  //       labelText: 'Full Name', hintText: 'eg. John Smith'),
+                  // ),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                  child: const Text('CANCEL'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              new FlatButton(
+                  child: const Text('Submit'),
+                  onPressed: () {
+                    databaseRefFeedback
+                        .push()
+                        .set({'Feedback': feedbackController.text});
+                    Navigator.pop(context);
+                    AwesomeDialog(
+                        context: context,
+                        animType: AnimType.LEFTSLIDE,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.SUCCES,
+                        title: 'Submitted',
+                        desc: 'Thanks For submitting your feeback',
+                        btnOkOnPress: () {
+                          debugPrint('OnClcik');
+                        },
+                        btnOkIcon: Icons.check_circle,
+                        onDissmissCallback: () {
+                          debugPrint('Dialog Dissmiss from callback');
+                        })
+                      ..show();
+                  })
+            ],
+          );
+        });
   }
 }

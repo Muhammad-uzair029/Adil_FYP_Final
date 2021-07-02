@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_fyp/Add_fvrt/Database.dart';
 import 'package:ecommerce_fyp/Global.dart';
+import 'package:ecommerce_fyp/User/CreditCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../Utils.dart';
 import 'package:toast/toast.dart';
 import 'package:ecommerce_fyp/Add_fvrt/fvrt_list.dart';
 
 class Order extends StatefulWidget {
-  String _name,
+  String type,
+      _name,
       _description,
       _email,
       _mobile,
@@ -18,11 +20,12 @@ class Order extends StatefulWidget {
       _productName,
       _productPrice,
       _productID,
-      _shopkeeperID;
+      _HotelStaffID;
 
   var _image;
 
   Order(
+      this.type,
       this._name,
       this._description,
       this._email,
@@ -31,18 +34,13 @@ class Order extends StatefulWidget {
       this._productName,
       this._productPrice,
       this._productID,
-      this._shopkeeperID,
+      this._HotelStaffID,
       this._image);
 
   @override
-  _OrderState createState() => _OrderState(_name, _description, _email, _mobile,
-      _address, _productName, _productPrice, _productID, _shopkeeperID, _image);
-}
-
-class _OrderState extends State<Order> {
-  String coupon = "0";
-  bool showcoupon = false;
-  String _name,
+  _OrderState createState() => _OrderState(
+      // type,
+      _name,
       _description,
       _email,
       _mobile,
@@ -50,7 +48,23 @@ class _OrderState extends State<Order> {
       _productName,
       _productPrice,
       _productID,
-      _shopkeeperID;
+      _HotelStaffID,
+      _image);
+}
+
+class _OrderState extends State<Order> {
+  String coupon = "0";
+  bool showcoupon = false;
+  String type,
+      _name,
+      _description,
+      _email,
+      _mobile,
+      _address,
+      _productName,
+      _productPrice,
+      _productID,
+      _HotelStaffID;
   var _image;
 
   TextEditingController _etName;
@@ -68,7 +82,7 @@ class _OrderState extends State<Order> {
       this._productName,
       this._productPrice,
       this._productID,
-      this._shopkeeperID,
+      this._HotelStaffID,
       this._image);
 
   availdiscount() {
@@ -298,7 +312,39 @@ class _OrderState extends State<Order> {
                   height: 45.0,
                   child: RaisedButton(
                     onPressed: () {
-                      orderProduct();
+                      // orderProduct();
+                      print("Product ID");
+                      print(_productID);
+
+                      print("Type");
+                      print(widget.type);
+
+                      FirebaseDatabase.instance
+                          .reference()
+                          .child('products')
+                          .child(widget.type)
+                          .child(_productID)
+                          .remove()
+                          .then((value) => print("Deleted"));
+                      DatePicker.showTimePicker(context, showTitleActions: true,
+                          onChanged: (date) {
+                        print('change $date in time zone ' +
+                            date.timeZoneOffset.inHours.toString());
+                      }, onConfirm: (date) {
+                        print('confirm $date');
+                      }, currentTime: DateTime.now());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreditCardPage(
+                                  _etName.text.trim(),
+                                  _etEmail.text.trim(),
+                                  _etPhone.text.trim(),
+                                  _etAddress.text.trim(),
+                                  _productID,
+                                  _productName,
+                                  _productPrice,
+                                  _HotelStaffID)));
                     },
                     color: Colors.amber,
                     child: Text(
@@ -328,7 +374,7 @@ class _OrderState extends State<Order> {
                           widget._productPrice,
                           widget._productID,
                           widget._image,
-                          widget._shopkeeperID);
+                          widget._HotelStaffID);
                       Toast.show("Product Added into Cart", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
                       print("add to cart Image Shownn");
@@ -356,7 +402,7 @@ class _OrderState extends State<Order> {
 
   QuerySnapshot snapshot;
   addToCart(String name, description, email, mobile, address, productName,
-      productPrice, productID, image, shopkeeperID) async {
+      productPrice, productID, image, HotelStaffID) async {
     Student st;
 
     var now = DateTime.now();
@@ -371,7 +417,7 @@ class _OrderState extends State<Order> {
         productID: productID,
         address: address,
         image: image,
-        shopkeeperID: shopkeeperID,
+        HotelStaffID: HotelStaffID,
         time: now.toLocal().toString());
     dbStudentManager.insertStudent(st).then((value) => {
           name,
@@ -382,7 +428,7 @@ class _OrderState extends State<Order> {
           productPrice,
           productID,
           image,
-          shopkeeperID,
+          HotelStaffID,
           now,
           print("Student Data Add to database $value"),
           // print(imageurl),
@@ -407,11 +453,11 @@ class _OrderState extends State<Order> {
       'product_id': _productID,
       'product_name': _productName,
       'product_price': widget._productPrice,
-      'shopkeeper_id': _shopkeeperID,
+      'HotelStaff_id': _HotelStaffID,
       'status': "Pending",
       'shippingstatus': "0"
     });
-    _message.collection('usertoken').doc(_shopkeeperID).get().then((value) {
+    _message.collection('usertoken').doc(_HotelStaffID).get().then((value) {
       if (value.exists) {
         print(value['token']);
         Global.sendnotification(

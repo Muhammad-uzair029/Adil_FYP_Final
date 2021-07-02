@@ -81,7 +81,7 @@ class _heartState extends State<heart> {
                       st.productPrice,
                       st.productID,
                       st.image,
-                      st.shopkeeperID,
+                      st.HotelStaffID,
                       st.time);
 
                   // IconButton(
@@ -138,7 +138,7 @@ class _heartState extends State<heart> {
       productPrice,
       productID,
       image,
-      shopkeeperID,
+      HotelStaffID,
       time) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -153,7 +153,7 @@ class _heartState extends State<heart> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ImageShow(shopkeeperID),
+                    // ImageShow(HotelStaffID),
                     Text(
                       productName,
                       style: TextStyle(fontSize: 18),
@@ -189,10 +189,11 @@ class _heartState extends State<heart> {
                                 ),
                               ]),
                           onPressed: () {
-                            getContents(shopkeeperID);
+                            getContents(HotelStaffID);
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return Order(
+                                  "Table",
                                   name,
                                   description,
                                   email,
@@ -201,7 +202,7 @@ class _heartState extends State<heart> {
                                   productName,
                                   productPrice,
                                   productID,
-                                  shopkeeperID,
+                                  HotelStaffID,
                                   image);
                             }));
                           }),
@@ -251,10 +252,10 @@ class _heartState extends State<heart> {
   }
 }
 
-// Widget ImageShow(String shopkeeperID) {
+// Widget ImageShow(String HotelStaffID) {
 //   return
 //  StreamBuilder(
-//     stream: FirebaseFirestore.instance.collection(shopkeeperID).snapshots(),
+//     stream: FirebaseFirestore.instance.collection(HotelStaffID).snapshots(),
 //     builder: (context, snapshot) {
 //       return !snapshot.hasData
 //           ? Text('PLease Wait')
@@ -262,7 +263,7 @@ class _heartState extends State<heart> {
 //     });
 //   FutureBuilder(
 //       // This assumes you have a project on Firebase with a firestore database.
-//       future: FirebaseFirestore.instance.collection(shopkeeperID).get(),
+//       future: FirebaseFirestore.instance.collection(HotelStaffID).get(),
 //       initialData: null,
 //       builder:
 //           (BuildContext context, AsyncSnapshot'<'QuerySnapshot'>' snapshot) {

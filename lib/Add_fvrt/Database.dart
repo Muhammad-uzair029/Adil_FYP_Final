@@ -11,7 +11,7 @@ class DBStudentManager {
       _datebase = await openDatabase(join(await getDatabasesPath(), "fvrts.db"),
           version: 1, onCreate: (Database db, int version) async {
         await db.execute(
-            "CREATE TABLE fvrt1 (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,productdescription TEXT,email TEXT,mobile TEXT,address TEXT,productName TEXT,productPrice TEXT,productID TEXT,image TEXT,shopkeeperID TEXT,time TEXT)");
+            "CREATE TABLE fvrt1 (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,productdescription TEXT,email TEXT,mobile TEXT,address TEXT,productName TEXT,productPrice TEXT,productID TEXT,image TEXT,HotelStaffID TEXT,time TEXT)");
       });
     }
   }
@@ -37,7 +37,7 @@ class DBStudentManager {
         productPrice: maps[index]['productPrice'],
         productID: maps[index]['productID'],
         image: maps[index][' image'],
-        shopkeeperID: maps[index]['shopkeeperID'],
+        HotelStaffID: maps[index]['HotelStaffID'],
         time: maps[index]['time'],
       );
     });
@@ -66,7 +66,7 @@ class Student {
       productPrice,
       productID,
       image,
-      shopkeeperID,
+      HotelStaffID,
       time;
 
   Student({
@@ -79,7 +79,7 @@ class Student {
     @required this.productID,
     @required this.address,
     @required this.image,
-    @required this.shopkeeperID,
+    @required this.HotelStaffID,
     @required this.time,
     this.id,
   });
@@ -94,7 +94,7 @@ class Student {
       'productPrice': productPrice,
       'productID': productID,
       'image': image,
-      'shopkeeperID': shopkeeperID,
+      'HotelStaffID': HotelStaffID,
       'time': time
     };
   }

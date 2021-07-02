@@ -1,4 +1,5 @@
 import 'package:ecommerce_fyp/Admin/AdminHomeScreen.dart';
+import 'package:ecommerce_fyp/Authentication/ForgotPassword.dart';
 import 'package:ecommerce_fyp/Authentication/RegisterScreen.dart';
 import 'package:ecommerce_fyp/User/UserHomeScreen.dart';
 import 'package:ecommerce_fyp/Utils.dart';
@@ -7,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../ShopKeeper/Screens/ShopKeeperHomeScreen.dart';
+import '../HotelStaff/Screens/HotelStaffHomeScreen.dart';
 
 class Login extends StatefulWidget {
   final String type;
@@ -57,7 +58,7 @@ class _LoginState extends State<Login> {
                     'Login As $type',
                     style: TextStyle(
                         fontSize: 25,
-                        color: Colors.amber,
+                        color: Colors.redAccent,
                         fontWeight: FontWeight.bold),
                   ),
                   Column(
@@ -72,7 +73,7 @@ class _LoginState extends State<Login> {
                       ),
                       TextField(
                         controller: email,
-                        cursorColor: Colors.amber,
+                        cursorColor: Colors.redAccent,
                         keyboardType: TextInputType.emailAddress,
                         decoration: new InputDecoration(
                             enabledBorder: OutlineInputBorder(
@@ -106,7 +107,7 @@ class _LoginState extends State<Login> {
                       ),
                       TextField(
                         controller: password,
-                        cursorColor: Colors.amber,
+                        cursorColor: Colors.redAccent,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
                         decoration: new InputDecoration(
@@ -165,7 +166,7 @@ class _LoginState extends State<Login> {
                             if (!validation(context)) return;
                             login(context);
                           },
-                          color: Colors.amber,
+                          color: Colors.redAccent,
                           child: Text(
                             'Confirm',
                             style:
@@ -182,40 +183,58 @@ class _LoginState extends State<Login> {
                       (type == "Admin")
                           ? Container()
                           : Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Don\'t have an account?  ',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                              child: Column(
+                              children: [
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ForgotPassword()));
+                                  },
+                                  child: Text(
+                                    'Forgot Password?',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
                                   ),
-                                  GestureDetector(
-                                      onTap: () {
-                                        if (type == 'User') {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Register('User')));
-                                        } else if (type == 'Shopkeeper') {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Register('Shopkeeper')));
-                                        }
-                                      },
-                                      child: Text(
-                                        "SignUp",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.amber,
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Don\'t have an account?  ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          if (type == 'User') {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Register('User')));
+                                          } else if (type == 'Shopkeeper') {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Register(
+                                                            'Shopkeeper')));
+                                          }
+                                        },
+                                        child: Text(
+                                          "SignUp",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.redAccent,
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            )),
                     ],
                   )
                 ],
@@ -277,11 +296,11 @@ class _LoginState extends State<Login> {
           if (snapshot.value['active'] == 1) {
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => ShopKeeperHome()),
+                MaterialPageRoute(builder: (context) => HotelStaffHome()),
                 ModalRoute.withName("/Shopkeeper"));
           } else {
             Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text('Shopkeeper is not active'),
+              content: Text('Hotel-Staff is not active'),
             ));
           }
         } else if (type.toLowerCase() == 'user') {

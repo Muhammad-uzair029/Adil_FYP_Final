@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:ecommerce_fyp/Admin/AdminHomeScreen.dart';
-import 'package:ecommerce_fyp/ShopKeeper/Screens/ShopKeeperHomeScreen.dart';
+import 'package:ecommerce_fyp/HotelStaff/Screens/HotelStaffHomeScreen.dart';
 import 'package:ecommerce_fyp/User/UserHomeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -57,15 +57,15 @@ class _UserTypeState extends State<UserType> {
                 context,
                 MaterialPageRoute(builder: (context) => AdminHome()),
                 ModalRoute.withName("/Admin"));
-          } else if (type.toLowerCase() == 'shopkeeper') {
+          } else if (type.toLowerCase() == 'Shopkeeper') {
             if (snapshot.value['active'] == 1) {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => ShopKeeperHome()),
+                  MaterialPageRoute(builder: (context) => HotelStaffHome()),
                   ModalRoute.withName("/Shopkeeper"));
             } else {
               Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text('Shopkeeper is not active'),
+                content: Text('HotelStaff is not active'),
               ));
             }
           } else if (type.toLowerCase() == 'user') {
@@ -182,7 +182,7 @@ class _UserTypeState extends State<UserType> {
                       },
                       color: Colors.blue,
                       child: Text(
-                        'Login as ShopKeeper',
+                        'Login as HotelStaff',
                         style: TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                       shape: RoundedRectangleBorder(
