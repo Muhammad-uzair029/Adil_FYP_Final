@@ -5,7 +5,7 @@ import 'package:ecommerce_fyp/User/CreditCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 import '../Utils.dart';
 import 'package:toast/toast.dart';
 import 'package:ecommerce_fyp/Add_fvrt/fvrt_list.dart';
@@ -313,26 +313,21 @@ class _OrderState extends State<Order> {
                   child: RaisedButton(
                     onPressed: () {
                       // orderProduct();
+
                       print("Product ID");
                       print(_productID);
 
                       print("Type");
                       print(widget.type);
 
-                      FirebaseDatabase.instance
-                          .reference()
-                          .child('products')
-                          .child(widget.type)
-                          .child(_productID)
-                          .remove()
-                          .then((value) => print("Deleted"));
-                      DatePicker.showTimePicker(context, showTitleActions: true,
-                          onChanged: (date) {
-                        print('change $date in time zone ' +
-                            date.timeZoneOffset.inHours.toString());
-                      }, onConfirm: (date) {
-                        print('confirm $date');
-                      }, currentTime: DateTime.now());
+                      // FirebaseDatabase.instance
+                      //     .reference()
+                      //     .child('products')
+                      //     .child(widget.type)
+                      //     .child(_productID)
+                      //     .remove()
+                      //     .then((value) => print("Deleted"));
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
